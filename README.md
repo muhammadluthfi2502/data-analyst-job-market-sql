@@ -1,8 +1,8 @@
 # 💼 **Analyzing the Data Analyst Job Market with SQL**
 <br>
 
-**Tool** : PostgreSQL <br>  
-**Visualization** : Looker Studio <br>  
+**Tool** : PostgreSQL  
+**Visualization** : Python (pandas, matplotlib, seaborn)  
 **Dataset** : Kaggle – Data Analyst Job Listings (Glassdoor)  
 <br>
 <br>
@@ -14,12 +14,12 @@
 - [STAGE 1: Data Preparation](#-stage-1-data-preparation)
 	- [Create Database and ERD](#create-database-and-erd)
 - [STAGE 2: Data Analysis](#-stage-2-data-analysis)
-	- [Salary Trends by Location](#1-salary-trends-by-location)
+	- [Salary Trends by State](#1-salary-trends-by-state)
 	- [Salary Trends by Seniority Level](#2-salary-trends-by-seniority-level)
 	- [Top Companies by Hiring Volume](#3-top-companies-by-hiring-volume)
-	- [Salary Distribution by State](#4-salary-distribution-by-state)
+	- [Salary by Company Type](#4-salary-by-company-type)
 	- [Easy Apply vs Salary](#5-easy-apply-vs-salary)
-	- [Visualization Helper Dataset](#6-visualization-helper-dataset)
+	- [BI-Ready Aggregate Dataset](#6-bi-ready-aggregate-dataset)
 - [STAGE 3: Summary](#-stage-3-summary)
 <br>
 <br>
@@ -29,10 +29,10 @@
 ## 📂 **STAGE 0: Problem Statement**
 
 ### **Background Story**
-Pasar kerja untuk Data Analyst berkembang pesat, namun pencari kerja sering tidak memiliki gambaran yang jelas mengenai variasi gaji berdasarkan lokasi, senioritas, dan perusahaan.  
+Pasar kerja untuk Data Analyst berkembang pesat, namun pencari kerja sering tidak memiliki gambaran yang jelas mengenai variasi gaji berdasarkan lokasi, senioritas, dan karakteristik perusahaan.  
 Informasi yang terfragmentasi membuat proses negosiasi gaji dan perencanaan karier menjadi kurang optimal.
 
-Dalam proyek ini dilakukan analisis terhadap data lowongan pekerjaan Data Analyst untuk memahami pola kompensasi dan karakteristik pasar kerja secara kuantitatif menggunakan SQL.
+Dalam proyek ini dilakukan analisis terhadap data lowongan pekerjaan Data Analyst untuk memahami pola kompensasi dan struktur pasar kerja secara kuantitatif menggunakan SQL dan visualisasi Python.
 
 ---
 
@@ -41,8 +41,9 @@ Mengumpulkan insight dari analisis data lowongan kerja Data Analyst untuk:
 1. Mengidentifikasi negara bagian dengan gaji tertinggi  
 2. Menganalisis perbedaan gaji berdasarkan level senioritas  
 3. Menentukan perusahaan dengan volume hiring tertinggi  
-4. Menguji hubungan antara fitur *Easy Apply* dan tingkat gaji  
-5. Menyediakan dataset siap visualisasi untuk dashboard BI  
+4. Menganalisis variasi gaji berdasarkan tipe perusahaan  
+5. Menguji hubungan antara fitur *Easy Apply* dan tingkat gaji  
+6. Menyediakan lapisan data agregat siap BI untuk visualisasi lanjutan  
 
 <br>
 <br>
@@ -62,6 +63,14 @@ Dataset mencakup informasi lowongan kerja seperti:
 - Rating perusahaan  
 - Fitur Easy Apply  
 
+Data dibersihkan menggunakan Python sebelum dimuat ke PostgreSQL, termasuk:
+- Parsing salary range menjadi `salary_min` dan `salary_max`  
+- Normalisasi job title ke dalam `title_clean`  
+- Klasifikasi seniority level (Junior, Mid, Senior, Lead)  
+- Pemisahan lokasi menjadi `city`, `state`, `country`  
+
+---
+
 ### **Create Database and ERD**
 **Langkah-langkah yang dilakukan meliputi:**
 1. Membuat database PostgreSQL bernama `job_market_intelligence`  
@@ -75,7 +84,6 @@ Dataset mencakup informasi lowongan kerja seperti:
 <summary>Click untuk melihat Queries</summary>
 
 ```sql
--- Create staging table
 CREATE TABLE staging_jobs (
   job_title_raw TEXT,
   title_clean TEXT,
@@ -97,7 +105,6 @@ CREATE TABLE staging_jobs (
   easy_apply BOOLEAN
 );
 
--- Dimension: company
 CREATE TABLE dim_company (
   company_id SERIAL PRIMARY KEY,
   company_name TEXT UNIQUE,
@@ -111,7 +118,6 @@ CREATE TABLE dim_company (
   rating NUMERIC
 );
 
--- Dimension: location
 CREATE TABLE dim_location (
   location_id SERIAL PRIMARY KEY,
   city TEXT,
@@ -119,22 +125,18 @@ CREATE TABLE dim_location (
   country TEXT
 );
 
--- Dimension: job title
 CREATE TABLE dim_job_title (
   job_title_id SERIAL PRIMARY KEY,
   job_title_raw TEXT UNIQUE,
   title_clean TEXT
 );
 
--- Dimension: seniority
 CREATE TABLE dim_seniority (
   seniority_id SERIAL PRIMARY KEY,
   seniority_level TEXT UNIQUE
 );
 
--- Fact table
 CREATE TABLE fact_job_postings (
-  job_id SERIAL PRIMARY KEY,
   company_id INT REFERENCES dim_company(company_id),
   location_id INT REFERENCES dim_location(location_id),
   job_title_id INT REFERENCES dim_job_title(job_title_id),
@@ -154,19 +156,17 @@ CREATE TABLE fact_job_postings (
 
 ## 📂 **STAGE 2: Data Analysis**
 
-### **1. Salary Trends by Location**
-Analisis rata-rata gaji minimum, maksimum, dan midpoint berdasarkan negara bagian.
-
-<details>
-<summary>Click untuk melihat Queries</summary>
+### **1. Salary Trends by State**
 
 ```sql
 SELECT
-  l.state,
-  COUNT(*) AS job_count,
-  ROUND(AVG(f.salary_min), 0) AS avg_salary_min,
-  ROUND(AVG(f.salary_max), 0) AS avg_salary_max,
-  ROUND(AVG((f.salary_min + f.salary_max) / 2), 0) AS avg_salary_midpoint
+    l.state,
+    COUNT(*) AS job_count,
+    ROUND(AVG(f.salary_min), 0) AS avg_salary_min,
+    ROUND(AVG(f.salary_max), 0) AS avg_salary_max,
+    ROUND(AVG((f.salary_min + f.salary_max) / 2), 0) AS avg_salary_midpoint,
+    MIN(f.salary_min) AS lowest_salary_min,
+    MAX(f.salary_max) AS highest_salary_max
 FROM fact_job_postings f
 JOIN dim_location l ON f.location_id = l.location_id
 WHERE f.salary_min IS NOT NULL
@@ -176,23 +176,19 @@ HAVING COUNT(*) >= 5
 ORDER BY avg_salary_midpoint DESC;
 ```
 
-</details>
-
 ---
 
 ### **2. Salary Trends by Seniority Level**
-Perbandingan gaji berdasarkan level Junior, Mid, Senior, dan Lead.
-
-<details>
-<summary>Click untuk melihat Queries</summary>
 
 ```sql
 SELECT
-  s.seniority_level,
-  COUNT(*) AS job_count,
-  ROUND(AVG(f.salary_min), 0) AS avg_salary_min,
-  ROUND(AVG(f.salary_max), 0) AS avg_salary_max,
-  ROUND(AVG((f.salary_min + f.salary_max) / 2), 0) AS avg_salary_midpoint
+    s.seniority_level,
+    COUNT(*) AS job_count,
+    ROUND(AVG(f.salary_min), 0) AS avg_salary_min,
+    ROUND(AVG(f.salary_max), 0) AS avg_salary_max,
+    ROUND(AVG((f.salary_min + f.salary_max) / 2), 0) AS avg_salary_midpoint,
+    MIN(f.salary_min) AS lowest_salary_min,
+    MAX(f.salary_max) AS highest_salary_max
 FROM fact_job_postings f
 JOIN dim_seniority s ON f.seniority_id = s.seniority_id
 WHERE f.salary_min IS NOT NULL
@@ -201,103 +197,81 @@ GROUP BY s.seniority_level
 ORDER BY avg_salary_midpoint DESC;
 ```
 
-</details>
-
 ---
 
 ### **3. Top Companies by Hiring Volume**
-Menentukan perusahaan dengan jumlah lowongan terbanyak.
-
-<details>
-<summary>Click untuk melihat Queries</summary>
 
 ```sql
 SELECT
-  c.company_name,
-  COUNT(*) AS job_count
+    c.company_name,
+    COUNT(*) AS job_count,
+    ROUND(AVG((f.salary_min + f.salary_max) / 2), 0) AS avg_salary_midpoint
 FROM fact_job_postings f
 JOIN dim_company c ON f.company_id = c.company_id
+WHERE f.salary_min IS NOT NULL
+  AND f.salary_max IS NOT NULL
 GROUP BY c.company_name
+HAVING COUNT(*) >= 5
 ORDER BY job_count DESC
-LIMIT 10;
+LIMIT 15;
 ```
-
-</details>
 
 ---
 
-### **4. Salary Distribution by State**
-Distribusi midpoint gaji berdasarkan negara bagian.
-
-<details>
-<summary>Click untuk melihat Queries</summary>
+### **4. Salary by Company Type**
 
 ```sql
 SELECT
-  l.state,
-  ROUND(AVG((f.salary_min + f.salary_max) / 2), 0) AS avg_salary_midpoint
+    c.company_type,
+    COUNT(*) AS job_count,
+    ROUND(AVG(f.salary_min), 0) AS avg_salary_min,
+    ROUND(AVG(f.salary_max), 0) AS avg_salary_max,
+    ROUND(AVG((f.salary_min + f.salary_max) / 2), 0) AS avg_salary_midpoint
 FROM fact_job_postings f
-JOIN dim_location l ON f.location_id = l.location_id
+JOIN dim_company c ON f.company_id = c.company_id
 WHERE f.salary_min IS NOT NULL
   AND f.salary_max IS NOT NULL
-GROUP BY l.state
+  AND c.company_type IS NOT NULL
+GROUP BY c.company_type
+HAVING COUNT(*) >= 5
 ORDER BY avg_salary_midpoint DESC;
 ```
-
-</details>
 
 ---
 
 ### **5. Easy Apply vs Salary**
-Menguji apakah fitur *Easy Apply* memengaruhi tingkat gaji.
-
-<details>
-<summary>Click untuk melihat Queries</summary>
 
 ```sql
 SELECT
-  easy_apply,
-  COUNT(*) AS job_count,
-  ROUND(AVG((salary_min + salary_max) / 2), 0) AS avg_salary_midpoint
-FROM fact_job_postings
-WHERE salary_min IS NOT NULL
-  AND salary_max IS NOT NULL
-GROUP BY easy_apply;
+    f.easy_apply,
+    COUNT(*) AS job_count,
+    ROUND(AVG((f.salary_min + f.salary_max) / 2), 0) AS avg_salary_midpoint,
+    MIN(f.salary_min) AS lowest_salary_min,
+    MAX(f.salary_max) AS highest_salary_max
+FROM fact_job_postings f
+WHERE f.salary_min IS NOT NULL
+  AND f.salary_max IS NOT NULL
+GROUP BY f.easy_apply
+ORDER BY f.easy_apply;
 ```
-
-</details>
 
 ---
 
-### **6. Visualization Helper Dataset**
-Dataset ringkas untuk keperluan dashboard Looker Studio.
-
-<details>
-<summary>Click untuk melihat Queries</summary>
+### **6. BI-Ready Aggregate Dataset**
 
 ```sql
 SELECT
-  f.job_id,
-  c.company_name,
-  l.state,
-  l.city,
-  s.seniority_level,
-  jt.title_clean,
-  f.salary_min,
-  f.salary_max,
-  (f.salary_min + f.salary_max) / 2 AS salary_midpoint,
-  f.easy_apply
+    l.state,
+    COUNT(*) AS job_count,
+    ROUND(AVG(f.salary_min), 0) AS avg_salary_min,
+    ROUND(AVG(f.salary_max), 0) AS avg_salary_max,
+    ROUND(AVG((f.salary_min + f.salary_max) / 2), 0) AS avg_salary_midpoint
 FROM fact_job_postings f
-JOIN dim_company c ON f.company_id = c.company_id
 JOIN dim_location l ON f.location_id = l.location_id
-JOIN dim_seniority s ON f.seniority_id = s.seniority_id
-JOIN dim_job_title jt ON f.job_title_id = jt.job_title_id;
+WHERE f.salary_min IS NOT NULL
+  AND f.salary_max IS NOT NULL
+GROUP BY l.state;
 ```
-
-</details>
-
-<br>
-<br>
 
 ---
 
@@ -306,5 +280,6 @@ JOIN dim_job_title jt ON f.job_title_id = jt.job_title_id;
 - Negara bagian seperti **California** dan **New York** menawarkan gaji rata-rata tertinggi untuk posisi Data Analyst.  
 - **Senior** dan **Lead** roles memiliki midpoint gaji sekitar 15–20% lebih tinggi dibandingkan level Mid.  
 - Sebagian besar lowongan berasal dari segelintir perusahaan besar yang mendominasi volume hiring.  
-- Lowongan dengan fitur **Easy Apply** cenderung memiliki midpoint gaji sedikit lebih rendah dibandingkan lowongan reguler.  
-- Dataset hasil query akhir dapat langsung digunakan untuk membangun dashboard di Looker Studio.
+- Perusahaan bertipe **Public** dan **Enterprise** cenderung menawarkan gaji lebih tinggi dibandingkan startup kecil.  
+- Lowongan dengan fitur **Easy Apply** memiliki midpoint gaji sedikit lebih rendah, mengindikasikan potensi trade-off antara kemudahan melamar dan kompensasi.  
+- Dataset agregat akhir dirancang sebagai lapisan siap BI untuk konsumsi visualisasi lanjutan.
