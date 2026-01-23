@@ -1,0 +1,5 @@
+seniority_level,job_count,avg_salary_min,avg_salary_max,avg_salary_midpoint,lowest_salary_min,highest_salary_max
+Senior,411,56399.0,93151.0,74775.0,26000,190000
+Lead,67,56045.0,91940.0,73993.0,27000,129000
+Mid,1675,53986.0,89696.0,71841.0,24000,190000
+Junior,98,48929.0,80092.0,64510.0,24000,159000

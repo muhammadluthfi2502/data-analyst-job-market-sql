@@ -1,0 +1,14 @@
+company_type,job_count,avg_salary_min,avg_salary_max,avg_salary_midpoint
+Hospital,19,59789.0,103632.0,81711.0
+Unknown,16,57188.0,90000.0,73594.0
+-1,161,55565.0,91273.0,73419.0
+College / University,34,53882.0,92794.0,73338.0
+Company - Public,452,54352.0,91051.0,72701.0
+Company - Private,1273,54476.0,90533.0,72505.0
+Contract,11,55364.0,89636.0,72500.0
+Private Practice / Firm,9,55889.0,87333.0,71611.0
+Other Organization,13,52231.0,89154.0,70692.0
+Subsidiary or Business Segment,89,53742.0,87056.0,70399.0
+Nonprofit Organization,124,52935.0,84315.0,68625.0
+Government,37,45189.0,75486.0,60338.0
+School / School District,9,46333.0,72222.0,59278.0
