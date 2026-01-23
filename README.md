@@ -175,6 +175,9 @@ GROUP BY l.state
 HAVING COUNT(*) >= 5
 ORDER BY avg_salary_midpoint DESC;
 ```
+**Visualization: Average Salary by State**
+
+![Salary by State](assets/q1_salary_by_state.png)
 
 ---
 
@@ -196,6 +199,9 @@ WHERE f.salary_min IS NOT NULL
 GROUP BY s.seniority_level
 ORDER BY avg_salary_midpoint DESC;
 ```
+**Visualization: Salary Distribution by Seniority Level**
+
+![Salary by Seniority](assets/q2_salary_by_seniority.png)
 
 ---
 
@@ -215,6 +221,10 @@ HAVING COUNT(*) >= 5
 ORDER BY job_count DESC
 LIMIT 15;
 ```
+
+**Visualization: Top Hiring Companies**
+
+![Top Companies](assets/q3_top_companies.png)
 
 ---
 
@@ -237,6 +247,10 @@ HAVING COUNT(*) >= 5
 ORDER BY avg_salary_midpoint DESC;
 ```
 
+**Visualization: Salary by Company Type**
+
+![Salary by Company Type](assets/q4_salary_by_company_type.png)
+
 ---
 
 ### **5. Easy Apply vs Salary**
@@ -255,6 +269,10 @@ GROUP BY f.easy_apply
 ORDER BY f.easy_apply;
 ```
 
+**Visualization: Easy Apply vs Salary**
+
+![Easy Apply vs Salary](assets/q5_easy_apply_vs_salary.png)
+
 ---
 
 ### **6. BI-Ready Aggregate Dataset**
@@ -272,6 +290,10 @@ WHERE f.salary_min IS NOT NULL
   AND f.salary_max IS NOT NULL
 GROUP BY l.state;
 ```
+
+**Visualization: BI-Ready Salary Dataset**
+
+![BI Dataset](assets/q6_bi_salary_dataset.png)
 
 ---
 
