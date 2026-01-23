@@ -180,9 +180,9 @@ ORDER BY avg_salary_midpoint DESC;
 ![Salary by State](assets/q1_salary_by_state.png)
 
 Insight:
-- California menawarkan rata-rata gaji tertinggi, menunjukkan konsentrasi pasar kerja data yang sangat kuat di wilayah tersebut.
-- Terdapat kesenjangan gaji yang cukup besar antara negara bagian dengan gaji tertinggi dan terendah, mencerminkan ketimpangan geografis dalam kompensasi.
-- Negara bagian dengan jumlah lowongan kecil cenderung memiliki variasi gaji yang lebih tinggi.
+- California memiliki rata-rata gaji tertinggi (≈ 88 ribu) sekaligus volume lowongan terbesar, menunjukkan konsentrasi pasar kerja yang sangat kuat.
+- Terdapat kesenjangan gaji yang besar antar negara bagian, dari sekitar 37 ribu hingga 88 ribu.
+- Negara bagian dengan jumlah lowongan kecil cenderung memiliki rata-rata gaji yang kurang stabil.
 
 ---
 
@@ -209,9 +209,9 @@ ORDER BY avg_salary_midpoint DESC;
 ![Salary by Seniority](assets/q2_salary_by_seniority.png)
 
 Insight:
-- Level Senior dan Lead memiliki midpoint gaji yang hampir sama, menunjukkan bahwa kenaikan gaji mulai melambat pada level tertinggi.
-- Posisi Junior memiliki gaji yang jauh lebih rendah dibandingkan Mid dan Senior, menunjukkan penalti finansial pada tahap awal karier.
-- Terdapat kesenjangan gaji yang signifikan antara Junior dan Senior, menegaskan pentingnya progresi karier terhadap kompensasi.
+- Level Senior memiliki midpoint gaji tertinggi, sedikit lebih tinggi dibandingkan Lead.
+- Perbedaan gaji antara Mid dan Senior relatif kecil, menunjukkan kenaikan gaji melambat pada level menengah ke atas.
+- Terdapat selisih sekitar 10 ribu antara Junior dan Senior, menunjukkan dampak signifikan dari pengalaman kerja terhadap kompensasi.
 
 ---
 
@@ -237,9 +237,9 @@ LIMIT 15;
 ![Top Companies](assets/q3_top_companies.png)
 
 Insight:
-- Volume hiring sangat terkonsentrasi pada segelintir perusahaan, dengan satu perusahaan mendominasi jumlah lowongan.
-- Sebagian besar perusahaan dengan hiring tertinggi merupakan perusahaan staffing dan consulting, menunjukkan tingginya permintaan outsourcing.
-- Tingginya volume hiring tidak selalu berkorelasi dengan gaji yang lebih tinggi.
+- Volume hiring sangat terkonsentrasi pada satu perusahaan, dengan Staffigo mendominasi jumlah lowongan secara signifikan.
+- Sebagian besar perusahaan dengan hiring tertinggi merupakan perusahaan staffing dan consulting.
+- Perusahaan dengan volume hiring tinggi tidak selalu menawarkan gaji tertinggi, terlihat dari perusahaan seperti Apple yang memiliki gaji tinggi namun volume rendah.
 
 ---
 
@@ -267,9 +267,9 @@ ORDER BY avg_salary_midpoint DESC;
 ![Salary by Company Type](assets/q4_salary_by_company_type.png)
 
 Insight:
-- Organisasi bertipe Hospital dan sektor publik menawarkan rata-rata gaji tertinggi dibandingkan tipe perusahaan lainnya.
-- Perusahaan bertipe Government dan School District cenderung menawarkan gaji lebih rendah dibandingkan sektor swasta.
-- Sebagian besar tipe perusahaan berada dalam rentang gaji yang relatif sempit, menunjukkan diferensiasi kompensasi yang terbatas berdasarkan tipe organisasi.
+- Organisasi bertipe Hospital menawarkan rata-rata gaji tertinggi di antara seluruh tipe perusahaan.
+- Government dan School / School District memiliki gaji terendah, sekitar 59–60 ribu.
+- Sebagian besar tipe perusahaan berada pada rentang midpoint yang sempit (sekitar 70–73 ribu), menunjukkan diferensiasi gaji berdasarkan tipe organisasi relatif terbatas.
 
 ---
 
@@ -294,9 +294,9 @@ ORDER BY f.easy_apply;
 ![Easy Apply vs Salary](assets/q5_easy_apply_vs_salary.png)
 
 Insight:
-- Lowongan dengan fitur Easy Apply memiliki rata-rata gaji sedikit lebih tinggi dibandingkan lowongan tanpa Easy Apply.
-- Temuan ini bertentangan dengan asumsi bahwa Easy Apply identik dengan lowongan bergaji rendah.
-- Kemudahan melamar tidak selalu menjadi trade-off terhadap tingkat kompensasi.
+- Lowongan dengan fitur Easy Apply memiliki rata-rata gaji lebih tinggi (≈ 77 ribu) dibandingkan non–Easy Apply (≈ 72 ribu).
+- Namun, jumlah lowongan Easy Apply sangat kecil (80 vs 2.171), sehingga hasil ini berpotensi bias sampel.
+- Temuan ini perlu diinterpretasikan dengan hati-hati karena ketidakseimbangan jumlah data.
 
 ---
 
@@ -321,9 +321,9 @@ GROUP BY l.state;
 ![BI Dataset](assets/q6_bi_salary_dataset.png)
 
 Insight:
-- Dataset agregat ini mempertahankan pola gaji utama berdasarkan negara bagian dengan kompleksitas data yang lebih rendah.
-- Struktur tabel ini siap digunakan sebagai lapisan fakta untuk dashboard BI dan pelaporan lanjutan.
-- Agregasi ini memudahkan perbandingan benchmark gaji antar wilayah secara cepat.
+- Dataset agregat ini mempertahankan pola gaji utama berdasarkan negara bagian dengan jumlah baris yang jauh lebih ringkas.
+- Tabel ini siap digunakan sebagai lapisan fakta untuk dashboard BI dan analisis lanjutan.
+- Struktur agregasi memudahkan pembuatan benchmark gaji antar wilayah secara cepat.
 
 ---
 
