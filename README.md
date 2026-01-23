@@ -4,6 +4,13 @@
 **Tool** : PostgreSQL  
 **Visualization** : Python (pandas, matplotlib, seaborn)  
 **Dataset** : Kaggle – Data Analyst Job Listings (Glassdoor)  
+
+## 🔹 Project Highlights
+
+- Membangun model data dimensional (fact & dimension tables) di PostgreSQL untuk analisis analitik.
+- Menganalisis 2.253 lowongan untuk mengidentifikasi pola gaji berdasarkan lokasi, senioritas, dan tipe perusahaan.
+- Menghasilkan dataset agregat siap BI untuk dashboard dan pelaporan lanjutan.
+
 <br>
 <br>
 
@@ -329,9 +336,19 @@ Insight:
 
 ## 📂 **STAGE 3: Summary**
 
-- Negara bagian seperti **California** dan **New York** menawarkan gaji rata-rata tertinggi untuk posisi Data Analyst.  
-- **Senior** dan **Lead** roles memiliki midpoint gaji sekitar 15–20% lebih tinggi dibandingkan level Mid.  
-- Sebagian besar lowongan berasal dari segelintir perusahaan besar yang mendominasi volume hiring.  
-- Perusahaan bertipe **Public** dan **Enterprise** cenderung menawarkan gaji lebih tinggi dibandingkan startup kecil.  
-- Lowongan dengan fitur **Easy Apply** memiliki midpoint gaji sedikit lebih rendah, mengindikasikan potensi trade-off antara kemudahan melamar dan kompensasi.  
-- Dataset agregat akhir dirancang sebagai lapisan siap BI untuk konsumsi visualisasi lanjutan.
+Berdasarkan analisis terhadap 2.253 lowongan pekerjaan Data Analyst, diperoleh beberapa temuan utama sebagai berikut:
+
+- **California** merupakan negara bagian dengan rata-rata gaji tertinggi (≈ 88 ribu) sekaligus volume lowongan terbesar, menunjukkan konsentrasi pasar kerja data yang sangat kuat di wilayah tersebut.
+
+- Terdapat kesenjangan gaji geografis yang besar, dengan rentang midpoint gaji antar negara bagian berkisar dari sekitar **37 ribu hingga 88 ribu**.
+
+- Berdasarkan seniority level, **Senior** memiliki midpoint gaji tertinggi, sedikit di atas **Lead**, sementara **Junior** berada sekitar **10 ribu lebih rendah** dibandingkan Senior, menunjukkan dampak signifikan pengalaman kerja terhadap kompensasi.
+
+- Volume hiring sangat terkonsentrasi pada segelintir perusahaan, terutama perusahaan **staffing dan consulting**, sementara perusahaan dengan gaji tertinggi tidak selalu memiliki volume lowongan terbesar.
+
+- Berdasarkan tipe perusahaan, **Hospital** menawarkan gaji tertinggi, sedangkan **Government** dan **School District** berada pada kelompok dengan gaji terendah.
+
+- Lowongan dengan fitur **Easy Apply** menunjukkan rata-rata gaji lebih tinggi, namun jumlah datanya sangat kecil dibandingkan non–Easy Apply, sehingga hasil ini perlu diinterpretasikan dengan hati-hati.
+
+Secara keseluruhan, analisis ini menunjukkan bahwa **lokasi geografis, level senioritas, dan karakteristik perusahaan** merupakan faktor utama dalam menentukan tingkat kompensasi Data Analyst.  
+Dataset agregat akhir disiapkan sebagai **lapisan siap BI** untuk mendukung dashboard dan pelaporan lanjutan.
