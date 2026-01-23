@@ -179,6 +179,11 @@ ORDER BY avg_salary_midpoint DESC;
 
 ![Salary by State](assets/q1_salary_by_state.png)
 
+Insight:
+- California menawarkan rata-rata gaji tertinggi, menunjukkan konsentrasi pasar kerja data yang sangat kuat di wilayah tersebut.
+- Terdapat kesenjangan gaji yang cukup besar antara negara bagian dengan gaji tertinggi dan terendah, mencerminkan ketimpangan geografis dalam kompensasi.
+- Negara bagian dengan jumlah lowongan kecil cenderung memiliki variasi gaji yang lebih tinggi.
+
 ---
 
 ### **2. Salary Trends by Seniority Level**
@@ -203,6 +208,11 @@ ORDER BY avg_salary_midpoint DESC;
 
 ![Salary by Seniority](assets/q2_salary_by_seniority.png)
 
+Insight:
+- Level Senior dan Lead memiliki midpoint gaji yang hampir sama, menunjukkan bahwa kenaikan gaji mulai melambat pada level tertinggi.
+- Posisi Junior memiliki gaji yang jauh lebih rendah dibandingkan Mid dan Senior, menunjukkan penalti finansial pada tahap awal karier.
+- Terdapat kesenjangan gaji yang signifikan antara Junior dan Senior, menegaskan pentingnya progresi karier terhadap kompensasi.
+
 ---
 
 ### **3. Top Companies by Hiring Volume**
@@ -225,6 +235,11 @@ LIMIT 15;
 **Visualization: Top Hiring Companies**
 
 ![Top Companies](assets/q3_top_companies.png)
+
+Insight:
+- Volume hiring sangat terkonsentrasi pada segelintir perusahaan, dengan satu perusahaan mendominasi jumlah lowongan.
+- Sebagian besar perusahaan dengan hiring tertinggi merupakan perusahaan staffing dan consulting, menunjukkan tingginya permintaan outsourcing.
+- Tingginya volume hiring tidak selalu berkorelasi dengan gaji yang lebih tinggi.
 
 ---
 
@@ -251,6 +266,11 @@ ORDER BY avg_salary_midpoint DESC;
 
 ![Salary by Company Type](assets/q4_salary_by_company_type.png)
 
+Insight:
+- Organisasi bertipe Hospital dan sektor publik menawarkan rata-rata gaji tertinggi dibandingkan tipe perusahaan lainnya.
+- Perusahaan bertipe Government dan School District cenderung menawarkan gaji lebih rendah dibandingkan sektor swasta.
+- Sebagian besar tipe perusahaan berada dalam rentang gaji yang relatif sempit, menunjukkan diferensiasi kompensasi yang terbatas berdasarkan tipe organisasi.
+
 ---
 
 ### **5. Easy Apply vs Salary**
@@ -273,6 +293,11 @@ ORDER BY f.easy_apply;
 
 ![Easy Apply vs Salary](assets/q5_easy_apply_vs_salary.png)
 
+Insight:
+- Lowongan dengan fitur Easy Apply memiliki rata-rata gaji sedikit lebih tinggi dibandingkan lowongan tanpa Easy Apply.
+- Temuan ini bertentangan dengan asumsi bahwa Easy Apply identik dengan lowongan bergaji rendah.
+- Kemudahan melamar tidak selalu menjadi trade-off terhadap tingkat kompensasi.
+
 ---
 
 ### **6. BI-Ready Aggregate Dataset**
@@ -294,6 +319,11 @@ GROUP BY l.state;
 **Visualization: BI-Ready Salary Dataset**
 
 ![BI Dataset](assets/q6_bi_salary_dataset.png)
+
+Insight:
+- Dataset agregat ini mempertahankan pola gaji utama berdasarkan negara bagian dengan kompleksitas data yang lebih rendah.
+- Struktur tabel ini siap digunakan sebagai lapisan fakta untuk dashboard BI dan pelaporan lanjutan.
+- Agregasi ini memudahkan perbandingan benchmark gaji antar wilayah secara cepat.
 
 ---
 
